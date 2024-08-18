@@ -455,6 +455,12 @@ else
 ifneq ($(RK_ENABLE_FASTBOOT), y)
 	cp -fv $(KERNEL_DIR)/boot.img $(SYSDRV_DIR_OUT_IMAGE)/boot.img
 endif
+ifeq ($(LUCKY_ENABLE_LEGACY_IMG),y)
+	mkimage -A arm -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n 'LuckFox' -d $(KERNEL_DIR)/arch/$(ARCH)/boot/zImage $(KERNEL_DIR)/arch/$(ARCH)/boot/uImage
+	cp -fv $(KERNEL_DIR)/arch/$(ARCH)/boot/uImage $(SYSDRV_DIR_OUT_IMAGE)/boot.img
+	cp -fv $(KERNEL_DTB) $(SYSDRV_DIR_OUT_IMAGE)/fdt.img
+	echo 0000 > $(SYSDRV_DIR_OUT_IMAGE)/fdtfast.img
+endif
 ifneq ($(OUTPUT_FASTBOOT_IMAGE_PATH),)
 	$(call MAROC_COPY_PKG_TO_SYSDRV_OUTPUT, $(OUTPUT_FASTBOOT_IMAGE_PATH), $(KERNEL_DIR)/arch/$(ARCH)/boot/Image)
 	$(call MAROC_COPY_PKG_TO_SYSDRV_OUTPUT, $(OUTPUT_FASTBOOT_IMAGE_PATH), $(KERNEL_DIR)/resource.img)
@@ -463,6 +469,11 @@ endif
 	$(call MAROC_COPY_PKG_TO_SYSDRV_OUTPUT, $(OUTPUT_IMAGE_PATH), $(SYSDRV_DIR_OUT_IMAGE)/boot.img)
 	$(call MAROC_COPY_PKG_TO_SYSDRV_OUTPUT, $(OUTPUT_BOARD_BIN_PATH), \
 		$(SYSDRV_DIR_OUT_BOARD)/$(KERNEL_DTS:dts=dtb) $(SYSDRV_DIR_OUT_BOARD)/vmlinux)
+
+ifeq ($(LUCKY_ENABLE_LEGACY_IMG),y)
+	$(call MAROC_COPY_PKG_TO_SYSDRV_OUTPUT, $(OUTPUT_IMAGE_PATH), $(SYSDRV_DIR_OUT_IMAGE)/fdt.img)
+	$(call MAROC_COPY_PKG_TO_SYSDRV_OUTPUT, $(OUTPUT_IMAGE_PATH), $(SYSDRV_DIR_OUT_IMAGE)/fdtfast.img)
+endif
 endif
 
 kernel_clean:

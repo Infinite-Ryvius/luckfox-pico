@@ -54,6 +54,8 @@ struct rockchip_image {
 #define PART_TRUST			"trust"
 #define PART_MISC			"misc"
 #define PART_RESOURCE			"resource"
+#define PART_FDT			"fdt"
+#define PART_FDTFAST		"fdtfast"
 #define PART_KERNEL			"kernel"
 #define PART_BOOT			"boot"
 #define PART_VENDOR_BOOT		"vendor_boot"

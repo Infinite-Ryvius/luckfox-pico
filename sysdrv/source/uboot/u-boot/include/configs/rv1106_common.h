@@ -61,17 +61,17 @@
 
 /*
  *   Image:  0 - 8M
- *  zImage:  8 - 12M
- *     fdt: 12 - 13M
- * ramdisk: 14 ...
+ *  zImage:  8 - 13M
+ *     fdt: 13 - 14M
+ * ramdisk: 15 ...
  */
 #define ENV_MEM_LAYOUT_SETTINGS		\
 	"scriptaddr=0x00b00000\0"	\
 	"pxefile_addr_r=0x00c00000\0"	\
-	"fdt_addr_r=0x00c00000\0"	\
+	"fdt_addr_r=0x00e00000\0"	\
 	"kernel_addr_c=0x00808000\0"	\
 	"kernel_addr_r=0x00008000\0"	\
-	"ramdisk_addr_r=0x000e00000\0"
+	"ramdisk_addr_r=0x000f00000\0"
 
 #define CONFIG_EXTRA_ENV_SETTINGS	\
 	ENV_MEM_LAYOUT_SETTINGS		\
@@ -102,6 +102,15 @@
 #define RKIMG_BOOTCOMMAND		"boot_fit;"
 #define CONFIG_EXTRA_ENV_SETTINGS	ENV_MEM_LAYOUT_SETTINGS
 #endif
+
+#ifdef CONFIG_LUCKY_ENABLE_LEGACY
+#undef RKIMG_BOOTCOMMAND
+#define RKIMG_BOOTCOMMAND 	\
+		"blk read.part $kernel_addr_c boot;" \
+		"blk read.part $fdt_addr_r fdt;" \
+		"bootm $kernel_addr_c - $fdt_addr_r"
+#endif
+
 #endif	/* !CONFIG_SPL_BUILD */
 
 #endif
